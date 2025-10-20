@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traventure - Explore the World</title>
+
+  <style>
+    /* === RESET & BASE === */
+    * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body {background:#f9fafb;color:#111;}
+    a {text-decoration:none;color:inherit;}
+    img {max-width:100%;display:block;}
+
+    /* === HEADER === */
+    header {
+      background:#fff;display:flex;align-items:center;justify-content:space-between;
+      padding:15px 50px;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:1000;
+    }
+    .logo {font-size:22px;font-weight:700;}
+    nav ul {display:flex;list-style:none;gap:30px;}
+    nav a {color:#333;font-weight:500;position:relative;transition:color .2s;}
+    nav a:hover {color:#0066ff;}
+    nav a.active::after {
+      content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+      width:6px;height:6px;background:#ff6b00;border-radius:50%;
+    }
+
+    /* === NAV ICONS === */
+    .nav-icons {display:flex;align-items:center;}
+    .icon-btn {
+      background:none;border:none;padding:0;margin-right:8px;cursor:pointer;
+      display:flex;align-items:center;border-radius:50%;transition:background .2s,transform .15s;
+    }
+    .icon-btn:hover {background:rgba(0,0,0,0.05);transform:scale(1.05);}
+    .avatar-img {
+      width:36px;height:36px;border-radius:50%;object-fit:cover;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    }
+    .profile {display:flex;align-items:center;gap:8px;}
+    .user-info {font-size:13px;color:var(--muted,#6b7280);}
+    .user-info strong {color:#111;margin-left:6px;}
+
+    /* === HERO === */
+    .hero {
+      display:flex;justify-content:space-between;align-items:center;
+      padding:80px 60px;flex-wrap:wrap;background:#f9fafb;
+    }
+    .hero-text {flex:1;min-width:300px;}
+    .hero-text h1 {font-size:64px;line-height:1.1;margin-bottom:20px;}
+    .hero-text p {color:#6b7280;max-width:500px;margin-bottom:40px;}
+    .explore-btn {font-weight:500;color:#0066ff;cursor:pointer;}
+    .hero-gallery {display:flex;gap:16px;flex:1;justify-content:flex-end;flex-wrap:wrap;}
+    .hero-gallery img {
+      width:160px;height:140px;border-radius:16px;object-fit:cover;
+      box-shadow:0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* === SEARCH BAR === */
+    .search-bar {
+      background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.05);
+      margin:-40px auto 60px;padding:25px 40px;max-width:1000px;
+      display:flex;flex-wrap:wrap;align-items:center;gap:20px;
+    }
+    .tab {display:flex;gap:10px;margin-bottom:15px;width:100%;}
+    .tab button {
+      padding:8px 18px;border:none;border-radius:20px;cursor:pointer;
+      background:#f3f4f6;color:#333;font-weight:500;
+    }
+    .tab button.active {background:#0066ff;color:#fff;}
+    .search-field {flex:1;min-width:200px;}
+    .search-field label {display:block;font-size:13px;color:#6b7280;margin-bottom:6px;}
+    .search-field input,.search-field select {
+      width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;outline:none;
+    }
+    .search-field input:focus,.search-field select:focus {border-color:#0066ff;}
+    .search-bar button.search-now {
+      padding:12px 30px;background:#0066ff;color:#fff;border:none;
+      border-radius:8px;cursor:pointer;font-weight:500;
+    }
+
+    /* === FILTERS === */
+    .filters {
+      display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin:30px 0;
+    }
+    .filter-btn {
+      display:flex;align-items:center;gap:6px;padding:12px 18px;border-radius:12px;
+      background:#fff;border:1px solid rgba(15,23,36,0.05);min-width:90px;
+      font-weight:600;color:#333;cursor:pointer;transition:all .2s ease;
+    }
+    .filter-btn:hover {background:#0066ff;color:#fff;}
+    .filter-btn.active {background:#0066ff;color:#fff;}
+    .filter-btn svg {margin-right:4px;stroke:currentColor;}
+
+    /* === DESTINATIONS === */
+    section.destinations {padding:40px 60px 100px;background:#f9fafb;}
+    .destinations h2 {font-size:32px;margin-bottom:40px;text-align:center;}
+    .dest-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;
+    }
+    .dest-card {
+      background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);
+      overflow:hidden;transition:transform .2s;
+    }
+    .dest-card:hover {transform:translateY(-4px);}
+    .dest-card img {width:100%;height:180px;object-fit:cover;}
+    .dest-info {padding:15px;}
+    .dest-info h3 {font-size:18px;margin-bottom:6px;}
+    .dest-info p {font-size:14px;color:#6b7280;}
+    .price-rating {
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:10px;font-size:14px;
+    }
+    .price {font-weight:600;}
+    .rating {color:#f5b50a;font-weight:500;}
+
+    /* === FOOTER === */
+    footer {
+      text-align:center;padding:20px;background:#fff;font-size:14px;
+      color:#6b7280;border-top:1px solid #eee;
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeIn {
+      from {opacity:0;transform:translateY(10px);}
+      to {opacity:1;transform:translateY(0);}
+    }
+
+    /* === RESPONSIVE === */
+    @media(max-width:768px){
+      header{flex-wrap:wrap;justify-content:center;gap:20px;}
+      .hero{padding:40px 20px;text-align:center;}
+      .hero-text h1{font-size:42px;}
+      .hero-gallery{justify-content:center;}
+      .search-bar{padding:20px;}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Traventure</div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Destination</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-icons">
+      <button class="icon-btn" title="Favorites">
+        <svg width="24" height="24" fill="none" stroke="#6b7280" stroke-width="2">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5a5.5 5.5 0 0111 0 5.5 5.5 0 0111 0c0 3.78-3.4 6.86-8.55 11.54z"/>
+        </svg>
+      </button>
+      <button class="icon-btn" title="Cart">
+        <svg width="24" height="24" fill="none" stroke="#6b7280" stroke-width="2">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+        </svg>
+      </button>
+      <div class="profile">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=64&auto=format&fit=crop" alt="avatar" class="avatar-img">
+        <div class="user-info">Hello! <strong>Mohammad</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Let’s Explore<br>the World</h1>
+      <p>Discover the world with ease! Your dream destinations and unforgettable experiences are just a click away.</p>
+      <div class="explore-btn">Explore Best Packages →</div>
+    </div>
+    <div class="hero-gallery">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400" alt="beach">
+      <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=400" alt="mountains">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=400" alt="city">
+    </div>
+  </section>
+
+  <div class="search-bar">
+    <div class="tab">
+      <button class="active">Destination</button>
+      <button>Flight</button>
+      <button>Hotel</button>
+    </div>
+    <div class="search-field">
+      <label>Location</label>
+      <select>
+        <option>Lisbon, Portugal</option>
+        <option>Dubai, UAE</option>
+        <option>Paris, France</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <label>Date</label>
+      <input type="date" value="2025-05-02">
+    </div>
+    <div class="search-field">
+      <label>Price Range</label>
+      <select>
+        <option>$10,000 – $12,000</option>
+        <option>$12,000 – $15,000</option>
+        <option>$15,000 – $20,000</option>
+      </select>
+    </div>
+    <button class="search-now">Search Now</button>
+  </div>
+
+  <!-- FILTER BUTTONS -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="beach">Beach</button>
+    <button class="filter-btn" data-filter="city">City</button>
+    <button class="filter-btn" data-filter="mountain">Mountain</button>
+  </div>
+
+  <section class="destinations">
+    <h2>Popular Destinations</h2>
+    <div class="dest-grid">
+      <div class="dest-card" data-category="beach">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600" alt="Santorini">
+        <div class="dest-info">
+          <h3>Santorini, Greece</h3>
+          <p>$890 Starting</p>
+          <div class="price-rating"><span class="price">$890</span><span class="rating">⭐ 5.0</span></div>
+        </div>
+      </div>
+      <div class="dest-card" data-category="city">
+        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=600" alt="Dubai">
+        <div class="dest-info">
+          <h3>Dubai Sky Drive</h3>
+          <p>$990 Starting</p>
+          <div class="price-rating"><span class="price">$990</span><span class="rating">⭐ 4.9</span></div>
+        </div>
+      </div>
+      <div class="dest-card" data-category="city">
+        <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=600" alt="Paris">
+        <div class="dest-info">
+          <h3>Paris City Lights</h3>
+          <p>$1020 Starting</p>
+          <div class="price-rating"><span class="price">$1020</span><span class="rating">⭐ 5.0</span></div>
+        </div>
+      </div>
+      <div class="dest-card" data-category="mountain">
+        <img src="https://images.unsplash.com/photo-1500048993953-d23a436266cf?q=80&w=600" alt="Bali">
+        <div class="dest-info">
+          <h3>Bali, Indonesia</h3>
+          <p>$760 Starting</p>
+          <div class="price-rating"><span class="price">$760</span><span class="rating">⭐ 4.8</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2025 Traventure | All Rights Reserved</footer>
+
+  <!-- === FILTER SCRIPT === -->
+  <script>
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.dest-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const category = button.getAttribute('data-filter');
+        cards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeIn 0.3s ease';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
